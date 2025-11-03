@@ -6,11 +6,12 @@ interface Props {
   logoSrc?: string;
 }
 
+const BASE = import.meta.env.BASE_URL;
 const {
   title = 'Felix.AI',
   subtitle = 'AI solutions and research portfolio.',
-  bg = '/images/felixai_bg.jpg',
-  logoSrc = '/images/felix-logo-gradient-1200.png'
+  bg = BASE + 'images/felixai_bg.jpg',
+  logoSrc = BASE + 'images/felix-logo-gradient-1200.png'
 } = Astro.props as Props;
 ---
 
