@@ -1,0 +1,38 @@
+---
+import { GA_TRACKING_ID } from '../utils/analytics';
+
+// Only include script in production
+const isProduction = import.meta.env.PROD;
+---
+
+{isProduction && (
+  <script>
+    // Load Google Analytics script
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtag/js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','${GA_TRACKING_ID}');
+
+    // Initialize dataLayer
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_TRACKING_ID}');
+  </script>
+)}
+
+{/* Track page views on client-side navigation */}
+{isProduction && (
+  <script is:inline>
+    import { pageview } from '../utils/analytics';
+    
+    // Track initial pageview
+    pageview(window.location.pathname);
+    
+    // Track subsequent pageviews on client-side navigation
+    window.addEventListener('astro:page-load', () => {
+      pageview(window.location.pathname);
+    });
+  </script>
+)}

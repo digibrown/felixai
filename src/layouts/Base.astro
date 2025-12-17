@@ -15,6 +15,7 @@ const site = Astro.site ?? new URL('https://felix.ai');
 const canonical = new URL(Astro.url.pathname, site).toString();
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +43,7 @@ import Footer from '../components/Footer.astro';
       <slot />
     </main>
     <Footer />
+    <Analytics />
   </body>
   <style is:global>
     :root { color-scheme: light dark; --nav-h: 56px; }

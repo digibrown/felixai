@@ -1,0 +1,69 @@
+---
+const endpoint = import.meta.env.PUBLIC_CONTACT_API;
+---
+
+<form id="contact-form">
+  <label>
+    Name
+    <input name="name" required />
+  </label>
+
+  <label>
+    Email
+    <input type="email" name="email" required />
+  </label>
+
+  <label>
+    Message
+    <textarea name="message" minlength="10" required></textarea>
+  </label>
+
+  <!-- Honeypot (keep hidden, bots will fill it) -->
+  <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px" />
+
+  <button type="submit">Send</button>
+
+  <p id="contact-status" style="display:none"></p>
+</form>
+
+<script type="module">
+  const form = document.querySelector("#contact-form");
+  const status = document.querySelector("#contact-status");
+
+  function show(msg, ok) {
+    status.textContent = msg;
+    status.style.display = "block";
+    status.style.color = ok ? "inherit" : "crimson";
+  }
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    show("Sending…", true);
+
+    const endpoint = import.meta.env.PUBLIC_CONTACT_API;
+    if (!endpoint) {
+      show("Contact endpoint not configured.", false);
+      return;
+    }
+
+    try {
+      const body = Object.fromEntries(new FormData(form));
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        form.reset();
+        show("Thanks! Your message was sent.", true);
+      } else {
+        show("Sorry, something went wrong. Please try again.", false);
+      }
+    } catch (err) {
+      show("Network error — please try again.", false);
+    }
+  });
+</script>
+
